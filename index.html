@@ -736,7 +736,8 @@ function buildAll() {
 
 function revealCard(card, game, color) {
   if (card.classList.contains('revealed')) return;
-  card.classList.add('revealed', color || '');
+  card.classList.add('revealed');
+  if (color) card.classList.add(color);
 
   // Mark winner/loser
   const teams = card.querySelectorAll('.team');
