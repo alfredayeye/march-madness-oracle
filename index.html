@@ -782,18 +782,18 @@ function revealAll() {
     }
 
     const {card, game, color} = allCards[revealIdx];
-    revealCard(card, game, color);
 
-    // Auto-switch tab to show the card being revealed
+    // Switch tab FIRST so the panel is visible before we apply the revealed styles
     const panel = card.closest('.region-panel');
     if (panel) {
       const tabId = panel.id.replace('panel-', '');
-      activateTab(tabId);
+      const currentActive = document.querySelector('.region-panel.active');
+      if (!currentActive || currentActive.id !== panel.id) {
+        activateTab(tabId);
+      }
     }
 
-    // scroll card into view
-    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
+    revealCard(card, game, color);
     revealIdx++;
   }, 180);
 }
