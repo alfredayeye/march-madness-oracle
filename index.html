@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🔮 The Whimsical March Madness Oracle 2026</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+    :root {
+      --gold: #f5c842;
+      --pink: #ff6eb4;
+      --purple: #9b59f7;
+      --cyan: #00e5ff;
+      --green: #39ff14;
+      --bg: #0a0015;
+      --card-bg: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: #fff;
+      font-family: 'Nunito', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* STARFIELD */
+    #stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle linear infinite;
+    }
+    @keyframes twinkle {
+      0%,100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.4); }
+    }
+
+    /* FLOATING PARTICLES */
+    .particle {
+      position: fixed;
+      font-size: 1.4rem;
+      pointer-events: none;
+      animation: floatUp linear infinite;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      background: linear-gradient(180deg, rgba(155,89,247,0.3) 0%, transparent 100%);
+    }
+    .oracle-title {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: clamp(1.5rem, 5vw, 3.5rem);
+      background: linear-gradient(135deg, var(--gold), var(--pink), var(--purple), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      animation: shimmer 3s linear infinite;
+      background-size: 200%;
+    }
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    .oracle-sub {
+      margin-top: 0.5rem;
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    /* CHAMPION BANNER */
+    #champion-banner {
+      position: relative;
+      z-index: 10;
+      margin: 1rem auto;
+      max-width: 600px;
+      background: linear-gradient(135deg, #1a0030, #2d0060);
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(245,200,66,0.4);
+      display: none;
+    }
+    #champion-banner.visible { display: block; animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    .champ-label { font-size: 0.85rem; color: var(--gold); letter-spacing: 0.3em; text-transform: uppercase; }
+    .champ-name { font-family: 'Cinzel Decorative', cursive; font-size: 2.2rem; color: var(--gold); margin: 0.3rem 0; }
+    .champ-reason { font-size: 0.95rem; color: rgba(255,255,255,0.8); font-style: italic; }
+    .trophy-emoji { font-size: 3rem; }
+
+    /* REVEAL BUTTON */
+    .reveal-btn {
+      display: block;
+      margin: 1.5rem auto;
+      padding: 1rem 2.5rem;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 1.1rem;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 4px 20px rgba(155,89,247,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .reveal-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(155,89,247,0.8); }
+    .reveal-btn:active { transform: scale(0.97); }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding: 0 1rem;
+      position: relative;
+      z-index: 10;
+      margin: 0 auto 2rem;
+    }
+    .tab-btn {
+      padding: 0.6rem 1.3rem;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      backdrop-filter: blur(10px);
+    }
+    .tab-btn:hover { color: #fff; border-color: var(--purple); }
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(155,89,247,0.5);
+    }
+
+    /* REGION PANEL */
+    .region-panel { display: none; }
+    .region-panel.active { display: block; }
+
+    /* BRACKET GRID */
+    .bracket-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+      position: relative;
+      z-index: 10;
+    }
+    .round-label {
+      text-align: center;
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 0.9rem;
+      color: var(--cyan);
+      letter-spacing: 0.2em;
+      margin: 1.5rem 0 1rem;
+      text-transform: uppercase;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    /* GAME CARD */
+    .game-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1rem;
+      backdrop-filter: blur(10px);
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .game-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155,89,247,0.05), rgba(255,110,180,0.05));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .game-card:hover::before { opacity: 1; }
+    .game-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(155,89,247,0.2); }
+    .game-card.revealed {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px rgba(245,200,66,0.2);
+    }
+    .game-card.revealed.east-color   { border-color: #4cc9f0; box-shadow: 0 0 20px rgba(76,201,240,0.3); }
+    .game-card.revealed.west-color   { border-color: #f72585; box-shadow: 0 0 20px rgba(247,37,133,0.3); }
+    .game-card.revealed.midwest-color { border-color: #7bed9f; box-shadow: 0 0 20px rgba(123,237,159,0.3); }
+    .game-card.revealed.south-color  { border-color: #ffa502; box-shadow: 0 0 20px rgba(255,165,2,0.3); }
+
+    .matchup {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex: 1;
+      padding: 0.4rem 0.6rem;
+      border-radius: 8px;
+      transition: all 0.4s;
+    }
+    .team .seed {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.4);
+      min-width: 20px;
+    }
+    .team .name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+    .vs {
+      color: rgba(255,255,255,0.3);
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+    .team.winner {
+      background: linear-gradient(135deg, rgba(245,200,66,0.15), rgba(245,200,66,0.05));
+      border: 1px solid rgba(245,200,66,0.4);
+    }
+    .team.winner .name { color: var(--gold); }
+    .team.winner .seed { color: var(--gold); opacity: 0.7; }
+    .team.loser .name { text-decoration: line-through; color: rgba(255,255,255,0.3); }
+    .team.loser .seed { color: rgba(255,255,255,0.2); }
+    .sparkle-icon { font-size: 1rem; }
+
+    .reason-box {
+      margin-top: 0.7rem;
+      padding: 0.6rem 0.8rem;
+      background: rgba(155,89,247,0.1);
+      border-left: 3px solid var(--purple);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.8);
+      font-style: italic;
+      display: none;
+      animation: fadeSlideIn 0.4s ease;
+    }
+    .reason-box.visible { display: block; }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateX(-10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .winner-crown { font-size: 0.9rem; }
+
+    /* PROGRESS BAR */
+    .progress-bar-wrap {
+      max-width: 600px;
+      margin: 0.5rem auto 1.5rem;
+      position: relative;
+      z-index: 10;
+      text-align: center;
+    }
+    .progress-bar-bg {
+      background: rgba(255,255,255,0.1);
+      height: 8px;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--pink), var(--gold));
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .progress-text {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.4rem;
+    }
+
+    /* FINAL FOUR special */
+    .final-four-card {
+      max-width: 500px;
+      margin: 0 auto 1rem;
+    }
+    .championship-card {
+      max-width: 600px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(245,200,66,0.1), rgba(155,89,247,0.1));
+      border: 1px solid rgba(245,200,66,0.3) !important;
+    }
+    .championship-card .reason-box {
+      border-left-color: var(--gold);
+      background: rgba(245,200,66,0.1);
+    }
+
+    /* CONFETTI BURST */
+    .confetti-piece {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      pointer-events: none;
+      z-index: 9999;
+      animation: confettiFall 2.5s ease-in forwards;
+      border-radius: 2px;
+    }
+    @keyframes confettiFall {
+      0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg) scale(0.5); opacity: 0; }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 640px) {
+      .oracle-title { font-size: 1.4rem; }
+      .games-grid { grid-template-columns: 1fr; }
+      .champ-name { font-size: 1.6rem; }
+    }
+
+    /* SCROLL REVEAL */
+    .game-card { opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s, border-color 0.3s, box-shadow 0.3s; }
+    .game-card.in-view { opacity: 1; transform: translateY(0); }
+    .game-card.revealed { opacity: 1 !important; transform: translateY(0) !important; }
+
+    /* TOOLTIP SEED LABELS */
+    .seed-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 0.65rem;
+      font-weight: 800;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255,255,255,0.3);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<header>
+  <div class="oracle-title">🔮 The Whimsical March Madness Oracle</div>
+  <div class="oracle-sub">2026 NCAA Tournament · Predictions by Cosmic Decree</div>
+</header>
+
+<div id="champion-banner">
+  <div class="trophy-emoji">🏆</div>
+  <div class="champ-label">Your 2026 Champion</div>
+  <div class="champ-name" id="champ-name">???</div>
+  <div class="champ-reason" id="champ-reason"></div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+  <div class="progress-text" id="progress-text">0 of 67 prophecies revealed</div>
+</div>
+
+<button class="reveal-btn" id="reveal-btn" onclick="revealAll()">✨ Consult the Oracle ✨</button>
+
+<div class="tabs" role="tablist">
+  <button class="tab-btn active" onclick="switchTab('east')" role="tab">🔵 East</button>
+  <button class="tab-btn" onclick="switchTab('west')" role="tab">🌸 West</button>
+  <button class="tab-btn" onclick="switchTab('midwest')" role="tab">🌿 Midwest</button>
+  <button class="tab-btn" onclick="switchTab('south')" role="tab">🔶 South</button>
+  <button class="tab-btn" onclick="switchTab('finalfour')" role="tab">🏟️ Final Four</button>
+</div>
+
+<!-- EAST -->
+<div class="region-panel active" id="panel-east">
+  <div class="bracket-section">
+    <div class="round-label">⚔️ Round of 64 — East Region</div>
+    <div class="games-grid" id="east-r64"></div>
+    <div class="round-label">🌀 Round of 32 — East Region</div>
+    <div class="games-grid" id="east-r32"></div>
+    <div class="round-label">💎 Sweet Sixteen — East Region</div>
+    <div class="games-grid" id="east-s16"></div>
+    <div class="round-label">👑 Elite Eight — East Region</div>
+    <div class="games-grid" id="east-e8"></div>
+  </div>
+</div>
+
+<!-- WEST -->
+<div class="region-panel" id="panel-west">
+  <div class="bracket-section">
+    <div class="round-label">⚔️ Round of 64 — West Region</div>
+    <div class="games-grid" id="west-r64"></div>
+    <div class="round-label">🌀 Round of 32 — West Region</div>
+    <div class="games-grid" id="west-r32"></div>
+    <div class="round-label">💎 Sweet Sixteen — West Region</div>
+    <div class="games-grid" id="west-s16"></div>
+    <div class="round-label">👑 Elite Eight — West Region</div>
+    <div class="games-grid" id="west-e8"></div>
+  </div>
+</div>
+
+<!-- MIDWEST -->
+<div class="region-panel" id="panel-midwest">
+  <div class="bracket-section">
+    <div class="round-label">⚔️ Round of 64 — Midwest Region</div>
+    <div class="games-grid" id="midwest-r64"></div>
+    <div class="round-label">🌀 Round of 32 — Midwest Region</div>
+    <div class="games-grid" id="midwest-r32"></div>
+    <div class="round-label">💎 Sweet Sixteen — Midwest Region</div>
+    <div class="games-grid" id="midwest-s16"></div>
+    <div class="round-label">👑 Elite Eight — Midwest Region</div>
+    <div class="games-grid" id="midwest-e8"></div>
+  </div>
+</div>
+
+<!-- SOUTH -->
+<div class="region-panel" id="panel-south">
+  <div class="bracket-section">
+    <div class="round-label">⚔️ Round of 64 — South Region</div>
+    <div class="games-grid" id="south-r64"></div>
+    <div class="round-label">🌀 Round of 32 — South Region</div>
+    <div class="games-grid" id="south-r32"></div>
+    <div class="round-label">💎 Sweet Sixteen — South Region</div>
+    <div class="games-grid" id="south-s16"></div>
+    <div class="round-label">👑 Elite Eight — South Region</div>
+    <div class="games-grid" id="south-e8"></div>
+  </div>
+</div>
+
+<!-- FINAL FOUR -->
+<div class="region-panel" id="panel-finalfour">
+  <div class="bracket-section">
+    <div class="round-label">🌟 Final Four</div>
+    <div id="ff-games"></div>
+    <div class="round-label">🏆 National Championship</div>
+    <div id="championship-game"></div>
+  </div>
+</div>
+
+<footer>
+  Predictions made by cosmic vibrations, mascot threat assessments, and vibes-based analytics.<br>
+  Not responsible for emotional damage, lost wagers, or unexpected Cinderella stories.<br>
+  🔮 The Oracle is always right. Eventually.
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// BRACKET DATA
+// ─────────────────────────────────────────────
+const BRACKET = {
+  east: {
+    color: 'east-color',
+    r64: [
+      { t1: {s:1,n:'Duke'}, t2:{s:16,n:'Siena'}, w:'Duke',
+        reason: "Blue Devils have literal horns. Siena Saints are saints — canonically pacifist. This one ends before tipoff." },
+      { t1:{s:8,n:'Ohio State'}, t2:{s:9,n:'TCU'}, w:'Ohio State',
+        reason: "O-H! The crowd finishes it without thinking. TCU doesn't have a call-and-response. Psychological advantage: Ohio State." },
+      { t1:{s:5,n:"St. John's"}, t2:{s:12,n:'Northern Iowa'}, w:"St. John's",
+        reason: "St. John's is named after an Apostle who survived being boiled alive. Northern Iowa is named after a compass direction. Survival wins." },
+      { t1:{s:4,n:'Kansas'}, t2:{s:13,n:'California Baptist'}, w:'Kansas',
+        reason: "Kansas has Dorothy, Toto, and a tornado portal to Oz. California Baptist has sunshine. Portals to other dimensions beat sunshine." },
+      { t1:{s:6,n:'Louisville'}, t2:{s:11,n:'South Florida'}, w:'Louisville',
+        reason: "Louisville has bourbon. South Florida has humidity. Bourbon is scientifically more useful than humidity." },
+      { t1:{s:3,n:'Michigan State'}, t2:{s:14,n:'North Dakota State'}, w:'Michigan State',
+        reason: "Spartans defeated an entire Persian empire. North Dakota State is in North Dakota. North Dakota is not a Persian empire." },
+      { t1:{s:7,n:'UCLA'}, t2:{s:10,n:'UCF'}, w:'UCLA',
+        reason: "UCLA has produced 11 national championships. UCF stands for Under Construction Forever. You can't win a title while under construction." },
+      { t1:{s:2,n:'UConn'}, t2:{s:15,n:'Furman'}, w:'UConn',
+        reason: "UConn's mascot is Jonathan the Husky Dog. Furman sounds like a minor Batman villain. The dog wins." },
+    ],
+    r32: [
+      { t1:{s:1,n:'Duke'}, t2:{s:8,n:'Ohio State'}, w:'Duke',
+        reason: "Blue Devils can literally levitate over Buckeyes. It's in the rulebook they wrote themselves." },
+      { t1:{s:4,n:'Kansas'}, t2:{s:5,n:"St. John's"}, w:'Kansas',
+        reason: "Kansas Jayhawks are mythical bird-people hybrids. St. John's Red Storm is a weather event. Mythical creatures route through storms." },
+      { t1:{s:3,n:'Michigan State'}, t2:{s:6,n:'Louisville'}, w:'Michigan State',
+        reason: "Spartan armor vs a Cardinal (small red bird). Cardinals do not wear armor. The outcome is uncomfortable to describe." },
+      { t1:{s:2,n:'UConn'}, t2:{s:7,n:'UCLA'}, w:'UConn',
+        reason: "UConn has won 4 of the last 5 women's national titles. That energy seeps into the men's program through the floorboards." },
+    ],
+    s16: [
+      { t1:{s:1,n:'Duke'}, t2:{s:4,n:'Kansas'}, w:'Duke',
+        reason: "Cameron Boozer has a name that sounds like the protagonist of a sports movie. Kansas doesn't have a star with a cinematic surname. The narrative chooses Duke." },
+      { t1:{s:2,n:'UConn'}, t2:{s:3,n:'Michigan State'}, w:'UConn',
+        reason: "UConn's Dan Hurley visibly vibrates with cosmic basketball energy at all times. Izzo is legendary but Hurley is currently a conduit for a higher power." },
+    ],
+    e8: [
+      { t1:{s:1,n:'Duke'}, t2:{s:2,n:'UConn'}, w:'Duke',
+        reason: "Duke is from Durham, NC. Durham was named after a man named Bartlett Durham, who traded his land for a train station. Hustle is in the city's DNA. Also their logo has a very good D." },
+    ],
+  },
+
+  west: {
+    color: 'west-color',
+    r64: [
+      { t1:{s:1,n:'Arizona'}, t2:{s:16,n:'LIU'}, w:'Arizona',
+        reason: "Wildcats prowl the Sonoran Desert. LIU stands for Long Island University. Long Island is not where wildcats prowl. The biomes don't match." },
+      { t1:{s:8,n:'Villanova'}, t2:{s:9,n:'Utah State'}, w:'Utah State',
+        reason: "Utah State is named after the entire state of Utah. Villanova is named after a small Spanish village. Scale matters in basketball." },
+      { t1:{s:5,n:'Wisconsin'}, t2:{s:12,n:'High Point'}, w:'Wisconsin',
+        reason: "Wisconsin has cheese, a badger, and generational spite. High Point, NC is best known for furniture. You can't take a charge while sitting in a sectional." },
+      { t1:{s:4,n:'Arkansas'}, t2:{s:13,n:'Hawaii'}, w:'Arkansas',
+        reason: "Arkansas Razorbacks have the word 'razor' in their name. Hawaii is paradise. Paradise is statistically unprepared for razors." },
+      { t1:{s:11,n:'NC State'}, t2:{s:6,n:'BYU'}, w:'NC State',
+        reason: "Wolfpack howls at the full moon. BYU restricts caffeine. Sleep-deprived wolf vs. well-rested team that doesn't drink coffee. The wolf's primal energy prevails." },
+      { t1:{s:3,n:'Gonzaga'}, t2:{s:14,n:'Kennesaw State'}, w:'Gonzaga',
+        reason: "Gonzaga has been to March Madness so many times they have a frequent flyer miles account with the tournament." },
+      { t1:{s:7,n:'Miami (FL)'}, t2:{s:10,n:'Missouri'}, w:'Miami (FL)',
+        reason: "South Beach energy radiates at a frequency that Missouri simply isn't tuned to receive. The vibes are measurably better." },
+      { t1:{s:2,n:'Purdue'}, t2:{s:15,n:'Queens (NC)'}, w:'Purdue',
+        reason: "Purdue is a Big Ten school with massive engineering prestige. Queens NC is a small liberal arts school. Boilermakers know how to apply torque." },
+    ],
+    r32: [
+      { t1:{s:1,n:'Arizona'}, t2:{s:9,n:'Utah State'}, w:'Arizona',
+        reason: "Arizona IS a desert. Utah State is NEAR a desert. The original always beats the tribute." },
+      { t1:{s:4,n:'Arkansas'}, t2:{s:5,n:'Wisconsin'}, w:'Arkansas',
+        reason: "Razorbacks have literal razors built into their anatomy. Badgers have attitude. Razors defeat attitude in most documented encounters." },
+      { t1:{s:3,n:'Gonzaga'}, t2:{s:11,n:'NC State'}, w:'Gonzaga',
+        reason: "Gonzaga has been to the title game. NC State has been to Daytona Beach. These are different levels of achievement." },
+      { t1:{s:2,n:'Purdue'}, t2:{s:7,n:'Miami (FL)'}, w:'Purdue',
+        reason: "Purdue's coach Matt Painter has a name that sounds like a reliable craftsman. Miami wears flashy uniforms. Craftsmen build things that last." },
+    ],
+    s16: [
+      { t1:{s:1,n:'Arizona'}, t2:{s:4,n:'Arkansas'}, w:'Arizona',
+        reason: "Wildcats roam the desert in March specifically. It's practically their home court. The Razorbacks are in a foreign biome." },
+      { t1:{s:2,n:'Purdue'}, t2:{s:3,n:'Gonzaga'}, w:'Purdue',
+        reason: "Purdue is from Indiana. Indiana is where March Madness was spiritually invented (citation: vibes). The local team always has divine right." },
+    ],
+    e8: [
+      { t1:{s:1,n:'Arizona'}, t2:{s:2,n:'Purdue'}, w:'Purdue',
+        reason: "Boilermakers BUILD things. Wildcats SCRATCH things. What has been engineered and constructed will always outlast what has merely been clawed at." },
+    ],
+  },
+
+  midwest: {
+    color: 'midwest-color',
+    r64: [
+      { t1:{s:1,n:'Michigan'}, t2:{s:16,n:'UMBC'}, w:'Michigan',
+        reason: "Michigan has a wolverine. UMBC famously upset Virginia in 2018 and it was glorious. But wolverines have a vengeance memory of 1000 years. Michigan remembers UMBC." },
+      { t1:{s:8,n:'Georgia'}, t2:{s:9,n:'Saint Louis'}, w:'Georgia',
+        reason: "Georgia Bulldogs vs Saint Louis Billikens. A Billiken is a good-luck charm that looks like a bald elf. Bulldogs eat good-luck charms for breakfast." },
+      { t1:{s:5,n:'Texas Tech'}, t2:{s:12,n:'Akron'}, w:'Texas Tech',
+        reason: "Texas Tech Red Raiders ride on horseback. Akron Zips are named after a type of rubber overshoe. You cannot ride an overshoe into battle." },
+      { t1:{s:4,n:'Alabama'}, t2:{s:13,n:'Hofstra'}, w:'Alabama',
+        reason: "Alabama has Nick Saban's ghost. He retired from football but his spirit migrates into every Alabama sports program seasonally. It's still in there." },
+      { t1:{s:11,n:'Miami (OH)'}, t2:{s:6,n:'Tennessee'}, w:'Miami (OH)',
+        reason: "Miami Ohio went 31-1. When you are 31-1, you have already defied reality 31 times. One more is nothing. The Redhawks are in a different timeline." },
+      { t1:{s:3,n:'Virginia'}, t2:{s:14,n:'Wright State'}, w:'Virginia',
+        reason: "The Wright Brothers were technically from Ohio, but Virginia gets the Wright Brothers Memorial. Virginia has been appropriating Ohio achievements for 120 years. They're good at it." },
+      { t1:{s:7,n:'Kentucky'}, t2:{s:10,n:'Santa Clara'}, w:'Kentucky',
+        reason: "Kentucky Wildcats vs Santa Clara Broncos. A wildcat genuinely eats broncos in the wild. This is just documented nature." },
+      { t1:{s:2,n:'Iowa State'}, t2:{s:15,n:'Tennessee State'}, w:'Iowa State',
+        reason: "Iowa State Cyclones move at 200 miles per hour. Tennessee State Tigers are fast but not 200-miles-per-hour fast. Physics decides this one." },
+    ],
+    r32: [
+      { t1:{s:1,n:'Michigan'}, t2:{s:8,n:'Georgia'}, w:'Michigan',
+        reason: "Wolverines have survived ice ages, large predators, and multiple attempts by humans to contain them. Georgia just has nice weather. Nice weather is not a survival advantage." },
+      { t1:{s:11,n:'Miami (OH)'}, t2:{s:4,n:'Alabama'}, w:'Miami (OH)',
+        reason: "Saban's ghost can't haunt TWO upsets in a row. The poltergeist energy is depleted. Miami Ohio's 31-1 record is too loud to be haunted." },
+      { t1:{s:3,n:'Virginia'}, t2:{s:7,n:'Kentucky'}, w:'Virginia',
+        reason: "Tony Bennett's pack-line defense is a literal wall of human beings moving in perfect geometric formation. Kentucky runs into walls." },
+      { t1:{s:2,n:'Iowa State'}, t2:{s:5,n:'Texas Tech'}, w:'Iowa State',
+        reason: "Cyclones are self-sustaining weather systems. Red Raiders are people on horses. You cannot charge into a cyclone on horseback. Try it." },
+    ],
+    s16: [
+      { t1:{s:11,n:'Miami (OH)'}, t2:{s:1,n:'Michigan'}, w:'Miami (OH)',
+        reason: "⚠️ CINDERELLA ALERT ⚠️ Miami Ohio walks into the arena like they own the building. Because in this tournament, they do. The 31-1 record is now 33-1. The RedHawk soars. The wolverine is confused." },
+      { t1:{s:2,n:'Iowa State'}, t2:{s:3,n:'Virginia'}, w:'Iowa State',
+        reason: "Iowa State hasn't won a national championship but they've been dreaming about it since 1912. That's 114 years of accumulated dream energy. It's erupting now." },
+    ],
+    e8: [
+      { t1:{s:11,n:'Miami (OH)'}, t2:{s:2,n:'Iowa State'}, w:'Miami (OH)',
+        reason: "Miami Ohio eats the dreams of 2-seeds for brunch. Iowa State's cyclone meets a RedHawk who has flown THROUGH cyclones. This is the Cinderella story the Oracle foresaw in the stars. Miami Ohio advances to the Final Four." },
+    ],
+  },
+
+  south: {
+    color: 'south-color',
+    r64: [
+      { t1:{s:1,n:'Florida'}, t2:{s:16,n:'Prairie View A&M'}, w:'Florida',
+        reason: "Florida has literal alligators nesting on their campus. Prairie View A&M has a prairie. Alligators have been eating things on prairies since the Cretaceous." },
+      { t1:{s:8,n:'Clemson'}, t2:{s:9,n:'Iowa'}, w:'Clemson',
+        reason: "Clemson Tigers vs Iowa Hawkeyes. A tiger is bigger than a hawk. This has been verified by multiple zoologists and one very confused zookeeper." },
+      { t1:{s:5,n:'Vanderbilt'}, t2:{s:12,n:'McNeese'}, w:'Vanderbilt',
+        reason: "Vanderbilt sounds like old money, and old money has historically always advanced in brackets regardless of effort." },
+      { t1:{s:4,n:'Nebraska'}, t2:{s:13,n:'Troy'}, w:'Nebraska',
+        reason: "Nebraska has corn. Troy has a horse. Horses eat corn. Nebraska has infinitely more corn than any horse can consume. Logistic victory." },
+      { t1:{s:6,n:'UNC'}, t2:{s:11,n:'VCU'}, w:'VCU',
+        reason: "VCU's HAVOC defense is so chaotic it confuses the shot clock, the referees, and occasionally the opposing team's own GPS. UNC is not ready for this level of chaos theory." },
+      { t1:{s:3,n:'Illinois'}, t2:{s:14,n:'Penn'}, w:'Illinois',
+        reason: "Illinois Fighting Illini vs Penn Quakers. Quakers are famously non-violent. Illinois is famously Fighting. This bracket matchup was written by the committee with a sense of irony." },
+      { t1:{s:7,n:"Saint Mary's"}, t2:{s:10,n:'Texas A&M'}, w:"Saint Mary's",
+        reason: "Saint Mary's is named after the Virgin Mary. They will need one actual miracle and they will receive one, because that's how saints work." },
+      { t1:{s:2,n:'Houston'}, t2:{s:15,n:'Idaho'}, w:'Houston',
+        reason: "Houston, we have a problem. The problem is Idaho is in the bracket. Houston solves it with characteristic efficiency." },
+    ],
+    r32: [
+      { t1:{s:1,n:'Florida'}, t2:{s:8,n:'Clemson'}, w:'Florida',
+        reason: "Florida Gators won last year's title. They're defending with the ferocity of an alligator that has tasted victory and cannot unknow the flavor." },
+      { t1:{s:4,n:'Nebraska'}, t2:{s:5,n:'Vanderbilt'}, w:'Nebraska',
+        reason: "Nebraska's football program has put the fear of the Midwest into opponents for decades. That paranoia transfers between sports. Vanderbilt old-money energy crumbles under Midwest paranoia." },
+      { t1:{s:3,n:'Illinois'}, t2:{s:11,n:'VCU'}, w:'Illinois',
+        reason: "Illinois has been hungry for this. Brayden Burries is playing with focused energy that even VCU's chaos defense cannot disorder. Order defeats chaos on this particular Tuesday." },
+      { t1:{s:2,n:'Houston'}, t2:{s:7,n:"Saint Mary's"}, w:'Houston',
+        reason: "The miracle Saint Mary's needed was only good for one round. Houston's Kelvin Sampson calmly explains to the miracle that it has no remaining eligibility." },
+    ],
+    s16: [
+      { t1:{s:1,n:'Florida'}, t2:{s:4,n:'Nebraska'}, w:'Florida',
+        reason: "Florida is defending their title with the territorial instinct of an alligator that has staked out its section of the tournament swamp. Nebraska is good but it is not swamp-ready." },
+      { t1:{s:2,n:'Houston'}, t2:{s:3,n:'Illinois'}, w:'Houston',
+        reason: "Cougars are larger than Fighting Illini. It's basic food chain analysis. Kelvin Sampson nods. The cougar nods. Illinois does not have a rebuttal." },
+    ],
+    e8: [
+      { t1:{s:1,n:'Florida'}, t2:{s:2,n:'Houston'}, w:'Florida',
+        reason: "Florida wins the South with swamp magic, defending-champion grit, and the spiritual energy of every alligator that has ever watched basketball. The Gators go back to the Final Four." },
+    ],
+  },
+};
+
+const FINAL_FOUR = [
+  { t1:{s:'E1',n:'Duke'}, t2:{s:'W2',n:'Purdue'}, w:'Duke',
+    reason: "Duke in blue is beautiful. Purdue in old gold is perfectly fine. But beauty wins in the Final Four, and Cameron Boozer plays like a highlight reel being filmed in real time." },
+  { t1:{s:'M11',n:'Miami (OH)'}, t2:{s:'S1',n:'Florida'}, w:'Miami (OH)',
+    reason: "THE MOMENT ARRIVES. Miami Ohio's RedHawk carries 31 wins, a storybook season, and the combined belief of every underdog who ever picked up a basketball in Ohio. Florida has gators. Ohio has heart. This time — Ohio goes FURTHER." },
+];
+
+const CHAMPIONSHIP = {
+  t1:{s:'E1',n:'Duke'}, t2:{s:'M11',n:'Miami (OH)'}, w:'Miami (OH)',
+  reason: "THE PROPHECY IS COMPLETE. Miami, Ohio — a school that 97% of the country has never driven through — defeats the mighty Duke Blue Devils. Cameron Boozer is crying beautiful tears. The confetti is wrong color but nobody cares. A RedHawk circles Indianapolis. The mascot costume is sweaty and triumphant. The Oracle weeps with joy. MIAMI OHIO WINS THE 2026 NCAA TOURNAMENT.",
+};
+
+// ─────────────────────────────────────────────
+// BUILD BRACKET CARDS
+// ─────────────────────────────────────────────
+let totalGames = 0;
+let revealedGames = 0;
+let allCards = [];
+
+function buildCard(game, containerId, color) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const card = document.createElement('div');
+  card.className = `game-card`;
+  card.dataset.winner = game.w;
+  card.dataset.color = color || '';
+  totalGames++;
+
+  const isFinalFour = containerId === 'ff-games';
+  const isChamp = containerId === 'championship-game';
+  if (isChamp) card.classList.add('championship-card');
+  if (isFinalFour) card.classList.add('final-four-card');
+
+  const seed1 = game.t1.s || '?';
+  const seed2 = game.t2.s || '?';
+
+  card.innerHTML = `
+    <div class="matchup">
+      <div class="team" data-team="${game.t1.n}">
+        <span class="seed">${seed1}</span>
+        <span class="name">${game.t1.n}</span>
+      </div>
+      <span class="vs">VS</span>
+      <div class="team" data-team="${game.t2.n}">
+        <span class="seed">${seed2}</span>
+        <span class="name">${game.t2.n}</span>
+      </div>
+    </div>
+    <div class="reason-box">${game.reason}</div>
+  `;
+
+  container.appendChild(card);
+  allCards.push({ card, game, color });
+  return card;
+}
+
+function buildAll() {
+  // East
+  BRACKET.east.r64.forEach(g => buildCard(g, 'east-r64', BRACKET.east.color));
+  BRACKET.east.r32.forEach(g => buildCard(g, 'east-r32', BRACKET.east.color));
+  BRACKET.east.s16.forEach(g => buildCard(g, 'east-s16', BRACKET.east.color));
+  BRACKET.east.e8.forEach(g  => buildCard(g, 'east-e8',  BRACKET.east.color));
+
+  // West
+  BRACKET.west.r64.forEach(g => buildCard(g, 'west-r64', BRACKET.west.color));
+  BRACKET.west.r32.forEach(g => buildCard(g, 'west-r32', BRACKET.west.color));
+  BRACKET.west.s16.forEach(g => buildCard(g, 'west-s16', BRACKET.west.color));
+  BRACKET.west.e8.forEach(g  => buildCard(g, 'west-e8',  BRACKET.west.color));
+
+  // Midwest
+  BRACKET.midwest.r64.forEach(g => buildCard(g, 'midwest-r64', BRACKET.midwest.color));
+  BRACKET.midwest.r32.forEach(g => buildCard(g, 'midwest-r32', BRACKET.midwest.color));
+  BRACKET.midwest.s16.forEach(g => buildCard(g, 'midwest-s16', BRACKET.midwest.color));
+  BRACKET.midwest.e8.forEach(g  => buildCard(g, 'midwest-e8',  BRACKET.midwest.color));
+
+  // South
+  BRACKET.south.r64.forEach(g => buildCard(g, 'south-r64', BRACKET.south.color));
+  BRACKET.south.r32.forEach(g => buildCard(g, 'south-r32', BRACKET.south.color));
+  BRACKET.south.s16.forEach(g => buildCard(g, 'south-s16', BRACKET.south.color));
+  BRACKET.south.e8.forEach(g  => buildCard(g, 'south-e8',  BRACKET.south.color));
+
+  // Final Four
+  FINAL_FOUR.forEach(g => buildCard(g, 'ff-games', ''));
+  buildCard(CHAMPIONSHIP, 'championship-game', '');
+}
+
+function revealCard(card, game, color) {
+  if (card.classList.contains('revealed')) return;
+  card.classList.add('revealed', color || '');
+
+  // Mark winner/loser
+  const teams = card.querySelectorAll('.team');
+  teams.forEach(t => {
+    if (t.dataset.team === game.w) {
+      t.classList.add('winner');
+      t.innerHTML += ' <span class="winner-crown">👑</span>';
+    } else {
+      t.classList.add('loser');
+    }
+  });
+
+  card.querySelector('.reason-box').classList.add('visible');
+  revealedGames++;
+  updateProgress();
+}
+
+// ─────────────────────────────────────────────
+// REVEAL ALL with animation
+// ─────────────────────────────────────────────
+let revealIdx = 0;
+let revealInterval = null;
+
+function revealAll() {
+  const btn = document.getElementById('reveal-btn');
+  btn.disabled = true;
+  btn.textContent = '🌟 The Oracle Speaks...';
+
+  // Switch to current region tabs as we reveal
+  let tabOrder = ['east','west','midwest','south','finalfour'];
+  let regionLimits = [
+    allCards.indexOf(allCards.find(c => c.card.closest('#panel-west'))) || 16, // east
+  ];
+
+  if (revealInterval) clearInterval(revealInterval);
+
+  revealInterval = setInterval(() => {
+    if (revealIdx >= allCards.length) {
+      clearInterval(revealInterval);
+      showChampion();
+      btn.textContent = '✨ The Oracle Has Spoken ✨';
+      return;
+    }
+
+    const {card, game, color} = allCards[revealIdx];
+    revealCard(card, game, color);
+
+    // Auto-switch tab to show the card being revealed
+    const panel = card.closest('.region-panel');
+    if (panel) {
+      const tabId = panel.id.replace('panel-', '');
+      activateTab(tabId);
+    }
+
+    // scroll card into view
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    revealIdx++;
+  }, 180);
+}
+
+function showChampion() {
+  const banner = document.getElementById('champion-banner');
+  document.getElementById('champ-name').textContent = '🏀 ' + CHAMPIONSHIP.w + ' 🏀';
+  document.getElementById('champ-reason').textContent = CHAMPIONSHIP.reason;
+  banner.classList.add('visible');
+  banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  launchConfetti();
+}
+
+function updateProgress() {
+  const pct = (revealedGames / totalGames) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${revealedGames} of ${totalGames} prophecies revealed`;
+}
+
+// ─────────────────────────────────────────────
+// CONFETTI
+// ─────────────────────────────────────────────
+function launchConfetti() {
+  const colors = ['#f5c842','#ff6eb4','#9b59f7','#00e5ff','#39ff14','#ff4500'];
+  for (let i = 0; i < 120; i++) {
+    setTimeout(() => {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        top: -10px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        width: ${5 + Math.random() * 10}px;
+        height: ${5 + Math.random() * 10}px;
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        animation-duration: ${1.5 + Math.random() * 2}s;
+        animation-delay: ${Math.random() * 0.5}s;
+      `;
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 4000);
+    }, i * 30);
+  }
+}
+
+// ─────────────────────────────────────────────
+// TABS
+// ─────────────────────────────────────────────
+function activateTab(name) {
+  document.querySelectorAll('.region-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+  // Find matching tab button
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.getAttribute('onclick')?.includes("'" + name + "'")) b.classList.add('active');
+  });
+}
+
+function switchTab(name) {
+  activateTab(name);
+}
+
+// ─────────────────────────────────────────────
+// STARFIELD
+// ─────────────────────────────────────────────
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 160; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    star.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random() * 100}vw;
+      top: ${Math.random() * 100}vh;
+      animation-duration: ${2 + Math.random() * 4}s;
+      animation-delay: ${Math.random() * 4}s;
+    `;
+    container.appendChild(star);
+  }
+}
+
+function createParticles() {
+  const emojis = ['✨','⭐','🌟','💫','🏀','🔮','🌀','💥','🎊','🎉'];
+  for (let i = 0; i < 12; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      p.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        animation-duration: ${8 + Math.random() * 12}s;
+        animation-delay: ${Math.random() * 6}s;
+        font-size: ${0.8 + Math.random() * 1.2}rem;
+      `;
+      document.body.appendChild(p);
+    }, i * 400);
+  }
+  // replenish particles
+  setInterval(() => {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      animation-duration: ${8 + Math.random() * 10}s;
+      animation-delay: 0s;
+      font-size: ${0.8 + Math.random() * 1}rem;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 20000);
+  }, 1500);
+}
+
+// ─────────────────────────────────────────────
+// SCROLL REVEAL
+// ─────────────────────────────────────────────
+function setupScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('in-view');
+    });
+  }, { threshold: 0.1 });
+  allCards.forEach(({card}) => observer.observe(card));
+}
+
+// ─────────────────────────────────────────────
+// CLICK TO REVEAL INDIVIDUAL CARD
+// ─────────────────────────────────────────────
+document.addEventListener('click', e => {
+  const card = e.target.closest('.game-card');
+  if (!card) return;
+  const idx = allCards.findIndex(({card: c}) => c === card);
+  if (idx === -1) return;
+  const {game, color} = allCards[idx];
+  revealCard(card, game, color);
+  // Advance revealIdx if behind
+  if (idx >= revealIdx) revealIdx = idx + 1;
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+buildAll();
+createStars();
+createParticles();
+setupScrollReveal();
+updateProgress();
+</script>
+</body>
+</html>
